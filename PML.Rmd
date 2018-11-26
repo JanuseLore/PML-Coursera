@@ -1,0 +1,28 @@
+library(caret)
+setwd("/Users/Januse/coursera/")
+training = read.csv("/Users/Januse/coursera/data/cp_training.csv")
+testing = read.csv("/Users/Januse/coursera/data/cp_testing.csv")
+
+training1 = training[,-c(1:5,12:36, 50:59, 69:83,87:101,103:112,125:139,141:150)]
+testing1 = testing[,-c(1:5,12:36, 50:59, 69:83,87:101,103:112,125:139,141:150)]
+
+set.seed(2233)
+folds<-createFolds(y=training1$classe,k=20,list=TRUE,returnTrain=FALSE)
+training1_1<-training1[folds$Fold01,]
+modFit1_1_rf<- train(classe~., data=training1_1, method = "rf", prox = TRUE)
+modFit1_1_gbm<- train(classe~., data=training1_1, method = "gbm",  verbose = FALSE)
+
+modFit1_1_rpart<-train(classe~., data=training1_1, method = "rpart")
+modFit1_1_lda<- train(classe~., data=training1_1, method = "lda")
+training1_2<-training1[folds$Fold02,]
+modFit1_2_rf<- train(classe~., data=training1_2, method = "rf", prox = TRUE)
+modFit1_2_gbm<- train(classe~., data=training1_2, method = "gbm",  verbose = FALSE)
+
+training1_3<-training1[folds$Fold03,
+confusionMatrix(training1_3$classe,predict(modFit1_1_rf,training1_3))  
+confusionMatrix(training1_3$classe,predict(modFit1_1_gbm,training1_3)) 
+
+training1_4<-training1[folds$Fold04,]
+confusionMatrix(training1_4$classe,predict(modFit1_1_rf,training1_4))  
+
+confusionMatrix(training1_4$classe,predict(modFit1_1_gbm,training1_4)) 
